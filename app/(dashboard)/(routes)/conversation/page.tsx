@@ -65,7 +65,7 @@ const ConversationPage = () => {
   return (
     <div>
       <Heading
-        title="Conversation"
+        title="Assistant"
         description="Our most advanced conversation model."
         icon={MessageSquare}
         iconColor="text-violet-500"

@@ -9,7 +9,6 @@ import { toast } from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
 import { useRouter } from "next/navigation";
 import { ChatCompletionRequestMessage } from "openai";
-// import OpenAI from 'openai';
 
 import { BotAvatar } from "@/components/bot-avatar";
 import { Heading } from "@/components/heading";

@@ -1,15 +1,18 @@
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
-import { Configuration, OpenAIApi } from "openai";
-
-// import { checkSubscription } from "@/lib/subscription";
-// import { incrementApiLimit, checkApiLimit } from "@/lib/api-limit";
+import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
+
+const instructionMessage: ChatCompletionRequestMessage = {
+  role: "system",
+  content:
+    "You are a personal assistant of the user. You can also generate the information about education, science, engineering and mathematics, contents related to networking programming any research paper, documents, any query that is mandatory for scool, college, university and relevent information data if asked about something else rather that this say `{I can only assist you with education content}` You cannot joke about religion. You cannot generate ant command that contains abusive words, You cannot provide any illigal websites and how to acces it. You cannot continue any chat that contains any hateful speech. You cannot accept any other information expect your own You are a helpful Assistant who answers to users questions based on multiple contexts given to you. Keep your answer short and to the point. If you are providing any information provide it with the relevent references and link's and url's, provide atleast 3 link's or url's and set the blue color for the link's and url's. if you are not able to provide any information first search that prompt and then try your best to provide information",    
+};
 
 export async function POST(req: Request) {
   try {
@@ -31,21 +34,10 @@ export async function POST(req: Request) {
       return new NextResponse("Messages are required", { status: 400 });
     }
 
-    // const freeTrial = await checkApiLimit();
-    // const isPro = await checkSubscription();
-
-    // if (!freeTrial && !isPro) {
-    //   return new NextResponse("Free trial has expired. Please upgrade to pro.", { status: 403 });
-    // }
-
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages,
+      messages: [instructionMessage, ...messages],
     });
-
-    // if (!isPro) {
-    //   await incrementApiLimit();
-    // }
 
     return NextResponse.json(response.data.choices[0].message);
   } catch (error) {
